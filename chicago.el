@@ -25,8 +25,23 @@
 
 ;;; Code:
 
-(defun chicago-add-1 (n)
-  (+ n 1))
+(require 'json)
+
+(defun chicago-forecast-url ()
+  "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20%28select%20woeid%20from%20geo.places%281%29%20where%20text%3D%22chicago%2C%20il%22%29&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
+
+(defun chicago-get-json (url)
+  "Fetch JSON from a url string. Returns response as a cons list"
+  (with-current-buffer (url-retrieve-synchronously url)
+    (let ((json-string nil))
+      (goto-char url-http-end-of-headers)
+      (setq json-string
+            (buffer-substring-no-properties
+             (point) (point-max)))
+      (json-read-from-string json-string))))
+
+(defun chicago-weather-data ()
+  (chicago-get-json (chicago-forecast-url)))
 
 (provide 'chicago)
 

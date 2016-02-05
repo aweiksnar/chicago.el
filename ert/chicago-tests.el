@@ -4,14 +4,13 @@
 
 ;;; Code:
 
+(load-file "~/elisp/chicago.el/chicago.el")
 (require 'ert)
 (require 'chicago)
 
-(ert-deftest chicago ()
-  (should (equal 1 1)))
-
-(ert-deftest chicago-add-test ()
-  (let ((num (chicago-add-1 3)))
-    (should (equal num 4))))
+(ert-deftest chicago-weather-data-test ()
+  (let ((data (chicago-weather-data)))
+    (should (equal (type-of data) 'cons))
+    (should (equal (car (car data)) 'query))))
 
 ;;; chicago-tests.el ends here
